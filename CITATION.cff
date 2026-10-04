@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "Si usas esta herramienta, cítala así."
+type: software
+title: "SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española)"
+version: 1.0.0
+date-released: 2026-10-04
+license: MIT
+repository-code: "https://github.com/pblmza/sipat-calculator"
+url: "https://pblmza.github.io/sipat-calculator/"
+authors:
+  - family-names: Moreira-Zabala
+    given-names: Pablo
+    orcid: "https://orcid.org/0009-0004-2306-0273"
+    affiliation: "Unidad de Psiquiatría de Enlace y Medicina Psicosomática, Complejo Asistencial Barros Luco Trudeau, Servicio de Salud Metropolitano Sur, Santiago, Chile"
+keywords:
+  - SIPAT
+  - trasplante
+  - evaluación psicosocial
+  - psiquiatría de enlace
+  - calculadora clínica
+references:
+  - type: article
+    title: "The Stanford Integrated Psychosocial Assessment for Transplantation (SIPAT): a new tool for the psychosocial evaluation of pre-transplant candidates"
+    authors: [{family-names: Maldonado, given-names: José R.}]
+    journal: Psychosomatics
+    year: 2012
+    doi: 10.1016/j.psym.2011.12.012
+  - type: article
+    title: "Translation, adaptation, and reliability of the Stanford Integrated Psychosocial Assessment for Transplantation in the Spanish population"
+    authors: [{family-names: López-Lazcano, given-names: Ana I.}]
+    journal: Clinical Transplantation
+    year: 2019
+    doi: 10.1111/ctr.13688

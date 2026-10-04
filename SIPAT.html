@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SIPAT · Valoración Psicosocial Integrada para Trasplante — Dr. Pablo Moreira-Zabala</title>
+<meta name="author" content="Dr. Pablo Moreira-Zabala · Unidad de Psiquiatría de Enlace y Medicina Psicosomática, Hospital Barros Luco Trudeau">
+<meta name="description" content="Calculadora web del SIPAT (versión española): 23 ítems, puntaje total, subtotales por dominio e interpretación por tramos. Dr. Pablo Moreira-Zabala · Psiquiatría de Enlace, Hospital Barros Luco Trudeau.">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SIPAT · Calculadora de evaluación psicosocial para trasplante">
+<meta property="og:description" content="23 ítems, puntaje automático e interpretación por tramos (0–6 / 7–20 / 21–39 / 40–69 / ≥70). Dr. Pablo Moreira-Zabala · Unidad de Psiquiatría de Enlace y Medicina Psicosomática, Hospital Barros Luco Trudeau.">
+<meta property="og:image" content="https://pblmza.github.io/sipat-calculator/og-image.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://pblmza.github.io/sipat-calculator/">
+<meta property="og:locale" content="es_CL">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16202a; --muted:#5b6672; --line:#dfe3e8; --soft:#f5f7f9; --accent:#0e7490; --accent-soft:#e6f3f6;
+  --g:#15803d; --g-bg:#ecfdf3; --lg:#4d7c0f; --lg-bg:#f4fbe8; --a:#b45309; --a-bg:#fff7e6;
+  --o:#c2410c; --o-bg:#fff1e8; --r:#b91c1c; --r-bg:#fdecec; --gray:#6b7280; --gray-bg:#f3f4f6;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,sans-serif}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+header.top{border-bottom:1px solid var(--line);padding:18px 24px 14px}
+header.top h1{margin:0;font-size:21px;font-weight:700;letter-spacing:-.01em}
+header.top .sub{color:var(--muted);font-size:13px;margin-top:2px}
+header.top .tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+button.btn{font:inherit;font-size:14px;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);cursor:pointer}
+button.btn:hover{border-color:var(--accent);color:var(--accent)}
+button.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.btn.primary:hover{filter:brightness(1.08);color:#fff}
+
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;max-width:1240px;margin:0 auto;padding:20px 24px 40px}
+main{min-width:0}
+
+/* datos paciente */
+.pt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 14px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}
+.pt label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
+.pt input,.pt textarea{font:inherit;font-size:16px;min-height:40px;padding:6px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+.pt .full{grid-column:1/-1}
+.pt textarea{min-height:64px;resize:vertical}
+details.ptbox>summary{cursor:pointer;font-weight:600;font-size:14px;margin:0 0 10px;color:var(--muted)}
+
+.domain{margin-top:28px}
+.domain>h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 4px;display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--accent);padding-bottom:6px}
+.domain>h2 .dsc{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);letter-spacing:0}
+
+.item{border-bottom:1px solid var(--line);padding:16px 0}
+.item.sub{padding-left:18px;border-left:3px solid var(--accent-soft);margin-left:4px}
+.item h3{margin:0 0 4px;font-size:15.5px;font-weight:600;display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.item h3 .code{color:var(--accent);font-family:"IBM Plex Mono",monospace;margin-right:6px}
+.item h3 .val{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);white-space:nowrap}
+.item h3 .val.done{color:var(--ink)}
+.item .note{font-size:13px;color:var(--muted);margin:0 0 8px}
+.opts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.opt{display:grid;grid-template-columns:38px 1fr;gap:10px;align-items:start;border:1px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer;min-height:44px;transition:border-color .1s,background .1s}
+.opt:hover{border-color:#9fc9d4}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt .pts{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;text-align:center;border-radius:6px;background:var(--soft);padding:2px 0;color:var(--muted)}
+.opt .t{font-weight:600}
+.opt .d{color:var(--muted);font-size:13.5px}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.opt:has(input:checked) .pts{background:var(--accent);color:#fff}
+.opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.compact .item:not(.sub) .opt .d{display:none}
+
+/* panel */
+aside{position:relative}
+.panel{position:sticky;top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.verdict{padding:18px 18px 16px;border-bottom:1px solid var(--line);background:var(--gray-bg);border-left:6px solid var(--gray)}
+.verdict .lbl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.score{font-family:"IBM Plex Mono",monospace;font-size:46px;font-weight:600;line-height:1.05;margin:4px 0 2px}
+.score small{font-size:18px;color:var(--muted);font-weight:500}
+.cat{font-size:18px;font-weight:700}
+.rec{margin-top:6px;font-size:14px}
+.partial{margin-top:10px;font-size:13px;color:var(--a);font-weight:500}
+.st-0 {background:var(--g-bg); border-left-color:var(--g)}  .st-0 .cat{color:var(--g)}
+.st-1 {background:var(--lg-bg);border-left-color:var(--lg)} .st-1 .cat{color:var(--lg)}
+.st-2 {background:var(--a-bg); border-left-color:var(--a)}  .st-2 .cat{color:var(--a)}
+.st-3 {background:var(--o-bg); border-left-color:var(--o)}  .st-3 .cat{color:var(--o)}
+.st-4 {background:var(--r-bg); border-left-color:var(--r)}  .st-4 .cat{color:var(--r)}
+
+.sec{padding:14px 18px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:0}
+.sec h4{margin:0 0 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dom{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:14px;margin-bottom:8px}
+.dom .bar{grid-column:1/-1;height:6px;border-radius:3px;background:var(--soft);overflow:hidden}
+.dom .bar i{display:block;height:100%;background:var(--accent);width:0}
+.dom .n{font-family:"IBM Plex Mono",monospace}
+.scale{display:flex;flex-direction:column;gap:3px;font-size:13px}
+.scale div{display:grid;grid-template-columns:58px 1fr;gap:8px;padding:4px 6px;border-radius:6px}
+.scale div.on{background:var(--soft);font-weight:600;outline:1px solid var(--line)}
+.scale .rg{font-family:"IBM Plex Mono",monospace}
+.flags{margin:0;padding-left:18px;font-size:13.5px}
+.flags li::marker{color:var(--o)}
+.partial a{color:inherit;font-family:"IBM Plex Mono",monospace}
+.cite{display:block;margin:4px 0;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:var(--soft);color:var(--ink);font-size:13px}
+.item.missing h3 .val{color:var(--a)}
+.flags:empty::after{content:"Ninguno";color:var(--muted);margin-left:-18px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* barra móvil */
+.mbar{display:none}
+@media (max-width:899px){
+  .wrap{grid-template-columns:1fr;padding:14px 14px 40px;gap:20px}
+  header.top{padding:14px}
+  .pt{grid-template-columns:1fr 1fr}
+  .panel{position:static}
+  .mbar{display:flex;position:sticky;top:0;z-index:20;align-items:center;gap:10px;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));background:#fff;border-bottom:1px solid var(--line);cursor:pointer}
+  .mbar .dot{width:12px;height:12px;border-radius:50%;background:var(--gray);flex:none}
+  .mbar .ms{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:18px}
+  .mbar .mc{font-size:14px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mbar .mp{font-size:12px;color:var(--muted)}
+  .mbar.st-0 .dot{background:var(--g)} .mbar.st-1 .dot{background:var(--lg)} .mbar.st-2 .dot{background:var(--a)} .mbar.st-3 .dot{background:var(--o)} .mbar.st-4 .dot{background:var(--r)}
+  .mbar[class*="st-"]{background:#fff;border-left:0}
+}
+@media (max-width:520px){.pt{grid-template-columns:1fr}}
+
+footer{max-width:1240px;margin:0 auto;padding:18px 24px 40px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+footer p{margin:6px 0}
+footer details{margin-top:6px}
+
+/* impresión: informe limpio */
+@media print{
+  .mbar,header.top .tools,.actions,.no-print{display:none!important}
+  .wrap{display:block;padding:0}
+  .panel{position:static;break-inside:avoid;margin-bottom:16px}
+  aside{order:-1}
+  .opt{display:none}
+  .opt:has(input:checked){display:grid;border-color:#999;background:none}
+  .opt .d{display:block}
+  .item{break-inside:avoid;padding:8px 0}
+  body{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="mbar" id="mbar" role="button" tabindex="0" aria-label="Ver resultado">
+  <span class="dot"></span><span class="ms" id="m-score">0</span>
+  <span class="mc" id="m-cat">Sin responder</span><span class="mp" id="m-prog">0/23</span>
+</div>
+
+<header class="top">
+  <h1>SIPAT · Valoración Psicosocial Integrada para Trasplante de Stanford</h1>
+  <div class="sub">Maldonado et al., Psychosomatics 2012 · versión española López-Lazcano et al., Clin Transplant 2019 · Dr. Pablo Moreira-Zabala · Unidad de Psiquiatría de Enlace y Medicina Psicosomática, Hospital Barros Luco Trudeau</div>
+  <div class="tools">
+    <button class="btn" id="btn-compact" aria-pressed="false">Ocultar descripciones</button>
+    <button class="btn" id="btn-reset">Limpiar</button>
+  </div>
+</header>
+
+<div class="wrap">
+<main id="form">
+  <details class="ptbox" open>
+    <summary>Información del paciente (opcional — no se guarda)</summary>
+    <div class="pt">
+      <label class="full">Paciente<input id="p-nombre" autocomplete="off"></label>
+      <label>N° ficha<input id="p-ficha" autocomplete="off"></label>
+      <label>RUT<input id="p-rut" autocomplete="off"></label>
+      <label>Edad<input id="p-edad" inputmode="numeric" autocomplete="off"></label>
+      <label>Fecha de nacimiento<input id="p-fnac" autocomplete="off" placeholder="dd-mm-aaaa"></label>
+      <label>Género<input id="p-genero" autocomplete="off"></label>
+      <label>Estado civil<input id="p-civil" autocomplete="off"></label>
+      <label>Tipo de trasplante<input id="p-tx" autocomplete="off"></label>
+      <label>Entrevistador<input id="p-entrev" autocomplete="off"></label>
+      <label>Fecha de evaluación<input id="p-fecha" type="date"></label>
+      <label class="full">Historia clínica<textarea id="p-hc"></textarea></label>
+    </div>
+  </details>
+  <div id="items"></div>
+</main>
+
+<aside>
+  <div class="panel" id="panel">
+    <div class="verdict" id="verdict">
+      <div class="lbl">Puntuación SIPAT</div>
+      <div class="score"><span id="score">0</span> <small>/ <span id="max">120</span></small></div>
+      <div class="cat" id="cat">Sin responder</div>
+      <div class="rec" id="rec">Marca una opción en cada ítem.</div>
+      <div class="partial" id="partial"></div>
+    </div>
+    <div class="sec">
+      <h4>Por dominio</h4>
+      <div id="doms"></div>
+    </div>
+    <div class="sec">
+      <h4>Interpretación</h4>
+      <div class="scale" id="scale"></div>
+    </div>
+    <div class="sec">
+      <h4>Ítems en máximo puntaje</h4>
+      <ul class="flags" id="flags"></ul>
+    </div>
+    <div class="sec">
+      <h4>Recomendaciones</h4>
+      <textarea id="p-recs" style="width:100%;font:inherit;font-size:16px;min-height:70px;padding:8px 10px;border:1px solid var(--line);border-radius:7px" placeholder="Texto libre del evaluador"></textarea>
+    </div>
+    <div class="sec actions">
+      <button class="btn primary" id="btn-copy">Copiar resumen</button>
+      <button class="btn" id="btn-print">Imprimir / PDF</button>
+    </div>
+  </div>
+</aside>
+</div>
+
+<footer>
+  <p><b>v1.0.0</b> · Fuente revisada: 4 de octubre de 2026 · Puntaje = suma simple de los 23 ítems (I–XVIII + subítems IXa–IXd y Xa) del formulario en español. Rango 0–120. Puntos de corte del instrumento original (Maldonado 2012). Revisar ante nuevas validaciones o en ≤12 meses.</p>
+  <p class="no-print">Herramienta de apoyo; el juicio clínico del equipo de trasplante prima. No guarda ni envía datos clínicos: todo queda en este navegador y se borra al cerrar o pulsar «Limpiar».</p>
+  <div class="no-print">
+    <b>Cómo citar</b>
+    <span class="cite" id="cite-text">Moreira-Zabala P. <i>SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española).</i> Versión 1.0.0. 2026. https://pblmza.github.io/sipat-calculator/</span>
+    <span style="font-size:11.5px" id="cite-dois">DOI: pendiente de emisión en Zenodo · <a href="https://github.com/pblmza/sipat-calculator">Código y reglas en GitHub</a></span>
+    <div style="margin-top:6px"><button class="btn" type="button" id="btn-cite">Copiar cita</button></div>
+  </div>
+  <details class="no-print"><summary>Referencias y notas</summary>
+    <p>1. Maldonado JR, Dubois HC, David EE, et al. The Stanford Integrated Psychosocial Assessment for Transplantation (SIPAT): a new tool for the psychosocial evaluation of pre-transplant candidates. <i>Psychosomatics</i>. 2012;53(2):123-132. doi:10.1016/j.psym.2011.12.012</p>
+    <p>2. Maldonado JR, Sher Y, Lolak S, et al. The Stanford Integrated Psychosocial Assessment for Transplantation: a prospective study of medical and psychosocial outcomes. <i>Psychosom Med</i>. 2015;77(9):1018-1030. doi:10.1097/PSY.0000000000000241</p>
+    <p>3. López-Lazcano AI, López-Pelayo H, Lligoña A, et al. Translation, adaptation, and reliability of the Stanford Integrated Psychosocial Assessment for Transplantation in the Spanish population. <i>Clin Transplant</i>. 2019;33(10):e13688. doi:10.1111/ctr.13688</p>
+    <p>Nota: la versión inglesa revisada (2015) incluye IXa, IXb y Xa (máximo 110). El formulario español agrega IXc (manía) e IXd (psicosis), por lo que el máximo sube a 120; los puntos de corte no cambian.</p>
+    <p>Instrumento © Maldonado et al., Stanford University (2008, 2012); versión española © López-Lazcano et al. (2019). Esta calculadora reproduce el formulario con fines clínicos y docentes; el código es MIT.</p>
+  </details>
+  <details class="no-print"><summary>Historial de cambios</summary>
+    <p><b>1.0.0</b> (2026-10-04) — Versión inicial: 23 ítems del formulario «SIPAT CABL», interpretación por tramos (0–6, 7–20, 21–39, 40–69, ≥70), subtotales por dominio, aviso de puntaje parcial, resumen copiable, impresión y vista móvil.</p>
+  </details>
+</footer>
+
+<script>
+const ITEMS = [
+ {dom:"A", code:"I", title:"Conocimiento y comprensión del proceso de la enfermedad médica", note:"Que causó el fallo del órgano concreto.", opts:[
+  [0,"Comprensión excelente","El paciente y el sistema de apoyo entienden y son plenamente conscientes de la causa de la enfermedad que ha llevado a un fallo terminal del órgano. Ambos muestran un alto grado de aprendizaje autodirigido sobre el proceso de la enfermedad."],
+  [1,"Buena comprensión","El paciente y el sistema de apoyo generalmente entienden la causa y el curso de la enfermedad y cómo influye en el estado de salud actual."],
+  [2,"Comprensión moderada","Conocimiento moderado sobre el proceso de la enfermedad a pesar de la formación/material proporcionado. – O – Paciente que acaba de enterarse de su enfermedad y no ha recibido formación sobre el trasplante."],
+  [3,"Comprensión limitada","Solo conocimiento rudimentario a pesar de tener la enfermedad hace meses/años y/o haber recibido amplia formación."],
+  [4,"Comprensión pobre","El paciente y el sistema de apoyo muestran claramente negación extrema o indiferencia respecto a su enfermedad."]]},
+ {dom:"A", code:"II", title:"Conocimiento y comprensión del proceso de trasplante", opts:[
+  [0,"Comprensión excelente","Plenamente conscientes de la causa que lleva a necesitar un trasplante; alto grado de aprendizaje autodirigido y conocimiento excelente de riesgos y beneficios del trasplante."],
+  [1,"Buena comprensión","Han estudiado y comprendido el material informativo sobre el proceso de trasplante."],
+  [2,"Comprensión moderada","Conocimiento y comprensión moderados a pesar de la formación/material proporcionado. – O – Paciente que acaba de enterarse de su enfermedad y no ha recibido formación sobre el trasplante."],
+  [3,"Comprensión limitada","Solo conocimiento rudimentario a pesar de la formación intensiva del equipo de trasplante."],
+  [4,"Comprensión pobre","Negación extrema o indiferencia evidente respecto a la necesidad/el proceso de trasplante."]]},
+ {dom:"A", code:"III", title:"Predisposición / deseo de tratamiento (trasplante)", opts:[
+  [0,"Excelente","Muy motivado e implicado de forma proactiva en su cuidado médico."],
+  [1,"Buena","Manifiesta interés y está activamente implicado en su cuidado."],
+  [2,"Moderada","Ambivalente, solo pasivamente implicado en la evaluación; implicación aceptable en el mejor de los casos. – O – Paciente que acaba de enterarse de su enfermedad y no ha recibido formación sobre el trasplante."],
+  [3,"Escasa","Implicación limitada en su cuidado. La familia o el equipo parecen más interesados en el trasplante que el paciente."],
+  [4,"Pobre","Familia o médico presionan/obligan al paciente a participar; el paciente está desinteresado o poco comprometido."]]},
+ {dom:"A", code:"IV", title:"Cumplimiento / adherencia al tratamiento", note:"Referido a asuntos médicos.", opts:[
+  [0,"Excelente","Cumplimiento completo y colaboración efectiva con el personal médico."],
+  [2,"Buena","Generalmente cumplidor; requiere reorientación mínima o reeducación. Sin resultados adversos significativos documentados."],
+  [4,"Moderada","Cumplimiento solo parcial o autogestión excesiva que interfiere con el equipo o lleva a resultados negativos; requiere mucho esfuerzo y persuasión. – O – Paciente que acaba de enterarse de su enfermedad y no ha recibido formación sobre el trasplante."],
+  [6,"Escaso","Solo se muestra cumplidor después de que se han desarrollado complicaciones o efectos secundarios."],
+  [8,"Pobre","Falta de adherencia significativa con impacto negativo en la salud (p. ej., no adherencia al tratamiento; uso continuado de sustancias tras conocer la enfermedad)."]]},
+ {dom:"A", code:"V", title:"Factores de estilo de vida", note:"Incluye dieta, ejercicio, restricción de fluidos y hábitos según el órgano.", opts:[
+  [0,"Por iniciativa propia","Capaz de corregir, modificar y mantener por sí mismo los cambios terapéuticos y de estilo de vida necesarios."],
+  [1,"Receptivo","Responde a los cambios terapéuticos y de estilo de vida recomendados."],
+  [2,"Reacio","Reacio, pero cumple los cambios tras mucha insistencia del sistema de apoyo y del equipo."],
+  [3,"Tardío","Cumple los cambios recomendados solo después de desarrollar complicaciones."],
+  [4,"Resistente","Pese a los esfuerzos, mantiene hábitos dietéticos poco saludables y sedentarismo (no adherencia a dieta, ejercicio, pérdida de peso)."]]},
+
+ {dom:"B", code:"VI", title:"Disponibilidad del sistema de apoyo social", opts:[
+  [0,"Excelente","Múltiples familiares, cercanos y/o amigos identificados y activamente implicados. Sistema de reserva excelente y realista en marcha."],
+  [2,"Buena","Varias personas (mínimo dos) identificadas e implicadas. Sistema de reserva limitado, pero factible y apropiado."],
+  [4,"Moderada","Al menos un individuo identificado y comprometido. Reserva no confirmada, limitada y/o temporal."],
+  [6,"Limitada","Apoyo provisional, inconsistente, poco fiable, conflictivo, inseguro o no comprometido. Fiabilidad de la reserva cuestionable."],
+  [8,"Pobre","No identifica un apoyo realista y fiable, o el cuidador no ha asistido a reuniones y sesiones formativas requeridas. Sin reserva razonable."]]},
+ {dom:"B", code:"VII", title:"Funcionalidad del sistema de apoyo social", opts:[
+  [0,"Excelente","Apoyo extenso con iniciativa en aprender sobre la enfermedad; ya comprometido y eficazmente implicado en el cuidado."],
+  [2,"Buena","Apoyo limitado, comprometido y eficaz. O aún no involucrado pero preparado para ayudar, en un paciente por lo demás estable."],
+  [4,"Moderada","Los miembros del sistema de apoyo pueden necesitar ellos mismos trabajo psicosocial antes de estar listos para el trasplante."],
+  [6,"Limitada","Los miembros tienen problemas propios (médicos o psicosociales) que limitan su capacidad de ayudar de forma fiable. – O – Han expresado dudas/vacilaciones/discrepancias."],
+  [8,"Pobre","El cuidado del paciente ha sufrido por un apoyo poco fiable. – O – El equipo no ha podido trabajar eficazmente con el sistema de apoyo."]]},
+ {dom:"B", code:"VIII", title:"Adecuación del espacio básico de la vivienda y entorno", opts:[
+  [0,"Excelente","Alojamiento excelente, a largo plazo, fijo y adecuado."],
+  [1,"Bueno","Alojamiento aceptable, aunque no óptimo."],
+  [2,"Adecuado","El alojamiento referido es solo temporal y poco convincente."],
+  [3,"Limitado","No es posible confirmar el alojamiento referido o se percibe como inapropiado."],
+  [4,"Pobre","Inexistente; sin alojamiento estable. – O – Entorno que no promueve la salud relacionada con el trasplante."]]},
+
+ {dom:"C", code:"IX", title:"Presencia de psicopatología (ánimo, ansiedad, psicosis y otros)", note:"Excluye psicopatología orgánica (X) y trastornos de personalidad (XI). Si hay signos clínicos, evaluar IXa–IXd.", opts:[
+  [0,"Ninguna","Sin historia psiquiátrica."],
+  [2,"Leve","Psicopatología leve actual o previa (p. ej., trastorno adaptativo, duelo no complicado). Autolimitada, sin impacto significativo en el funcionamiento. Sin hospitalización psiquiátrica. Sin intención ni tentativa suicida."],
+  [4,"Moderada","Psicopatología moderada actual o previa (p. ej., trastorno depresivo o de ansiedad, esquizofrenia estable). Tratamiento efectivo, buen cumplimiento. Sin intención ni tentativa suicida."],
+  [6,"Grave","Psicopatología grave actual o previa con deterioro significativo del funcionamiento. Hospitalizaciones psiquiátricas previas o historia de ideación/tentativas suicidas, pero no actualmente."],
+  [8,"Extrema","Enfermedad mental muy grave actual o previa (incluye ideación o intento suicida actual) con claro mal funcionamiento; múltiples ingresos y/o TEC, o varios episodios de ideación/tentativa. Puede requerir intervención psiquiátrica urgente antes de seguir."]]},
+ {dom:"C", code:"IXa", sub:true, title:"Evaluación de depresión", note:"Juicio clínico; PHQ-9 o BDI si disponible.", opts:[
+  [0,"Sin depresión clínica","PHQ-9 < 5 · BDI 0–13"],
+  [1,"Depresión leve","PHQ-9 5–9 · BDI 14–19"],
+  [2,"Depresión moderada","PHQ-9 10–19 · BDI 20–28"],
+  [3,"Depresión grave","Incluye psicosis actual y/o ideación o conducta suicida · PHQ-9 ≥ 20 · BDI 29–63"]]},
+ {dom:"C", code:"IXb", sub:true, title:"Evaluación de ansiedad", note:"Juicio clínico; GAD-7 o BAI si disponible.", opts:[
+  [0,"Sin ansiedad clínica","GAD-7 < 5 · BAI 0–7"],
+  [1,"Ansiedad leve","GAD-7 5–9 · BAI 8–15"],
+  [2,"Ansiedad moderada","GAD-7 10–14 · BAI 16–25"],
+  [3,"Ansiedad grave","GAD-7 ≥ 15 · BAI 26–63"]]},
+ {dom:"C", code:"IXc", sub:true, title:"Evaluación de manía", note:"Juicio clínico; escala de manía de Bech-Rafaelsen (MRS) si disponible.", opts:[
+  [0,"Sin manía clínica","MRS < 5"],
+  [1,"Hipomanía","MRS 5–15"],
+  [3,"Manía leve","MRS 15–20"],
+  [4,"Manía moderada","MRS 21–28"],
+  [5,"Manía grave","MRS ≥ 28"]]},
+ {dom:"C", code:"IXd", sub:true, title:"Evaluación de psicosis", opts:[
+  [0,"Sin psicosis clínica",""],
+  [3,"Historia de psicosis","No en el presente."],
+  [5,"Síntomas psicóticos activos",""]]},
+ {dom:"C", code:"X", title:"Psicopatología orgánica o deterioro cognitivo (actual o previo)", note:"Psicopatología inducida por enfermedad o tratamiento/medicación (p. ej., encefalopatía, psicosis inducida por fármacos).", opts:[
+  [0,"Ninguna","Sin historia de problema psiquiátrico inducido por enfermedad o medicación."],
+  [1,"Leve","Psicopatología orgánica leve, previa o actual."],
+  [3,"Moderada","Psicopatología orgánica moderada, previa o actual."],
+  [5,"Grave","Psicopatología orgánica grave, previa o actual."]]},
+ {dom:"C", code:"Xa", sub:true, title:"Funcionamiento cognitivo actual", note:"Juicio clínico; MoCA o MMSE si disponible.", opts:[
+  [0,"Dentro de la normalidad","MoCA/MMSE ≥ 26"],
+  [1,"Límite","MoCA/MMSE 22–25"],
+  [2,"Deterioro cognitivo","MoCA/MMSE < 22"]]},
+ {dom:"C", code:"XI", title:"Influencia de rasgos de personalidad vs. trastorno", opts:[
+  [0,"Ninguna","Sin rasgos patológicos ni trastorno de la personalidad."],
+  [1,"Mínima","Algunos rasgos desadaptativos o defensas inmaduras solo como respuesta a enfermedad, tratamiento o estrés (no basales). Sin interferencia caracterial con el tratamiento. Sin ideación/conducta suicida."],
+  [2,"Leve","Rasgos mínimamente desadaptativos, basales o reactivos. Tratamiento efectivo si lo necesitó; buen cumplimiento, sin interferencia caracterial. Sin ideación/conducta suicida."],
+  [3,"Moderada","Psicopatología de personalidad o rasgos moderadamente desadaptativos basales, con exacerbación y mal afrontamiento ante estresores. Posibles ingresos previos. Cierta interferencia con el tratamiento. Puede haber ideación/conducta suicida."],
+  [4,"Grave","Patología caracterial muy grave basal con exacerbación significativa; interferencia significativa con el tratamiento. Necesita tratamiento psiquiátrico urgente antes de seguir, o múltiples ingresos y/o ideación/tentativas suicidas por patología de personalidad."]]},
+ {dom:"C", code:"XII", title:"Veracidad / conducta engañosa en el tratamiento o la evaluación", opts:[
+  [0,"Ninguno","Sin evidencia de comportamiento engañoso presente o pasado."],
+  [2,"Menor","No facilitó alguna información negativa, pero al preguntarle directamente dice la verdad."],
+  [4,"Leve","No comunicó completamente la información negativa, pero la entrega al ser confrontado."],
+  [6,"Moderado","No comunicó la información negativa; se obtuvo de fuentes externas."],
+  [8,"Grave","Evidencia clara de conducta engañosa por historia clínica, información colateral o laboratorio."]]},
+ {dom:"C", code:"XIII", title:"Riesgo general de psicopatología", note:"Integra ítems IX–XII.", opts:[
+  [0,"Ninguno","Afrontamiento excelente; sin historia psiquiátrica personal ni familiar; sin complicaciones psiquiátricas ante enfermedad o estrés."],
+  [1,"Mínimo","Afrontamiento previo aceptable de desafíos médicos o estresores. Sin complicaciones psiquiátricas ante enfermedad o estrés."],
+  [2,"Leve","Afrontamiento previo inadecuado; solo complicaciones psiquiátricas mínimas, si las hubo."],
+  [3,"Moderado","Afrontamiento previo problemático; algunas complicaciones psiquiátricas ante enfermedad o tratamiento. –Y/O– Psicopatología moderada en la familia de origen."],
+  [4,"Grave","Problemas significativos de afrontamiento. –Y/O– Psicopatología significativa en la familia de origen."]]},
+
+ {dom:"D", code:"XIV", title:"Trastorno por uso de alcohol", note:"Juicio clínico; AUDIT si disponible.", opts:[
+  [0,"Ninguno","Sin historia de consumo de alcohol. AUDIT = 0."],
+  [2,"Uso no problemático","Cantidades mínimas, patrón socialmente aceptable, sin efectos perjudiciales; sin pérdidas de conciencia ni abstinencia. AUDIT < 7."],
+  [4,"Patrón de riesgo","Consumo excesivo con posibles efectos nocivos, sin dependencia. Dejó al conocer la enfermedad o cuando se lo indicaron por primera vez; pudo requerir intervención. AUDIT 8–15."],
+  [6,"Patrón perjudicial","Trastorno grave (siguió pese a consecuencias; pérdidas de conciencia) y/o dependencia. Requirió tratamiento (o lo rechazó), o siguió bebiendo con enfermedad avanzada y complicaciones. AUDIT 16–19."],
+  [8,"Patrón de dependencia","Muy grave: grandes cantidades regulares o atracones pese a consecuencias y a peticiones de dejarlo; pérdidas de conciencia o dependencia; múltiples recaídas pese a avisos y tratamiento. AUDIT ≥ 20."]]},
+ {dom:"D", code:"XV", title:"Alcohol — riesgo de recaída", opts:[
+  [0,"Ninguno","Nunca ha consumido alcohol."],
+  [1,"Bajo riesgo","Uso mínimo sin problemas; dejó al pedírselo o por iniciativa propia; sin recaídas; sigue en programa de mantenimiento si lo inició. Abstinencia > 36 meses."],
+  [2,"Riesgo moderado","Bebía más o por más tiempo de lo pretendido; consecuencias mínimas a moderadas; pudo requerir ayuda; dispuesto a asistir a programa (AA). Abstinencia > 12 meses."],
+  [3,"Alto riesgo","Siguió bebiendo pese a consecuencias significativas; consumo en su entorno cercano; reticente a tratamiento. Remisión intermedia (6–12 meses)."],
+  [4,"Riesgo extremo","Siguió pese a problemas sociales/interpersonales persistentes; bebió hasta justo antes de la manifestación clínica o hasta estar muy enfermo; recaídas tras tratamiento o sobriedad prolongada; rechaza tratamiento; convive con bebedores; comorbilidad psiquiátrica mal controlada. Remisión temprana (< 6 meses)."]]},
+ {dom:"D", code:"XVI", title:"Trastorno por uso de sustancias", note:"Incluye medicamentos recetados y sustancias ilegales. Juicio clínico; DAST-10 si disponible.", opts:[
+  [0,"Ninguno","Sin consumo de sustancias ilegales ni abuso de medicamentos. DAST-10 = 0."],
+  [2,"Problemas de bajo nivel","Abuso mínimo en el pasado sin efectos perjudiciales; sin pérdidas de conciencia ni abstinencia; dejó al conocer la enfermedad o cuando se lo indicaron. DAST-10 1–2."],
+  [4,"Moderado","Uso excesivo con posibles efectos perjudiciales, sin dependencia; dejó al conocer la enfermedad o cuando se lo indicaron; pudo requerir intervención. DAST-10 3–5."],
+  [6,"Considerable","Siguió pese a consecuencias y/o dependencia; requirió tratamiento (o lo rechazó), o siguió consumiendo con enfermedad avanzada. DAST-10 6–8."],
+  [8,"Grave","Dependencia o abuso muy grave, grandes cantidades o atracones pese a consecuencias y peticiones; múltiples recaídas; consumió hasta justo antes de la manifestación clínica o hasta estar muy enfermo. DAST-10 9–10."]]},
+ {dom:"D", code:"XVII", title:"Sustancias — riesgo de recaída", opts:[
+  [0,"Ninguno","Nunca ha usado sustancias ilegales ni abusado de medicamentos."],
+  [1,"Bajo riesgo","Uso mínimo, quizá remoto, sin consecuencias; dejó al pedírselo o por iniciativa propia; sin recaídas; sigue en programa (NA) si lo inició. Abstinencia > 36 meses."],
+  [2,"Riesgo moderado","Consumía más o por más tiempo de lo pretendido; consecuencias moderadas; pudo requerir ayuda; dispuesto a programa de recuperación. Abstinencia > 12 meses."],
+  [3,"Alto riesgo","Siguió pese a consecuencias adversas; consumo en su entorno cercano; reticente a tratamiento. Remisión temprana (6–12 meses)."],
+  [4,"Riesgo muy grave","Siguió pese a problemas persistentes; consumió hasta justo antes del inicio de la enfermedad; recaídas tras tratamiento o abstinencia prolongada; rechaza tratamiento; convive con consumidores; comorbilidad psiquiátrica mal controlada. Remisión muy temprana (< 6 meses)."]]},
+ {dom:"D", code:"XVIII", title:"Uso / abuso / dependencia de nicotina", opts:[
+  [0,"Ninguno","Nunca consumió tabaco en ninguna forma."],
+  [1,"Uso en el pasado","Abstinente > 6 meses (test de nicotina negativo)."],
+  [3,"Uso reciente","Abstinente < 6 meses (test de nicotina negativo)."],
+  [5,"Uso activo","Todavía fuma (por hospitalización, fuente colateral o prueba positiva)."]]}
+];
+
+const DOMS = {A:"A. Nivel de preparación del paciente", B:"B. Sistema de apoyo social", C:"C. Estabilidad psicológica y psicopatología", D:"D. Consecuencias del uso de sustancias"};
+
+// Interpretación — según nota Obsidian «Puntaje SIPAT» (cortes de Maldonado 2012)
+const BANDS = [
+  {min:0,  max:6,   cat:"Candidato excelente", rec:"Se recomienda incluir en lista de espera para trasplante sin reservas."},
+  {min:7,  max:20,  cat:"Buen candidato", rec:"Se recomienda incluir en lista de espera para trasplante, aunque puede ser necesario monitorizar los factores de riesgo identificados."},
+  {min:21, max:39,  cat:"Candidato mínimamente aceptable", rec:"Considerar la inclusión en lista. Los factores de riesgo identificados tienen que ser abordados satisfactoriamente antes de ser presentado a estudio."},
+  {min:40, max:69,  cat:"Candidato pobre", rec:"Se recomienda aplazar su inclusión en lista de espera hasta que los riesgos identificados sean satisfactoriamente abordados."},
+  {min:70, max:Infinity, cat:"Candidato de alto riesgo", rec:"Se han identificado riesgos significativos. Mientras los factores de riesgo identificados sigan estando presentes, no se recomienda la operación."}
+];
+const band = s => BANDS.findIndex(b => s >= b.min && s <= b.max);
+const maxOf = it => Math.max(...it.opts.map(o => o[0]));
+const MAX = ITEMS.reduce((a, it) => a + maxOf(it), 0);
+
+// --- render
+const host = document.getElementById("items");
+let curDom = null, domEl = null;
+ITEMS.forEach((it, i) => {
+  if (it.dom !== curDom) {
+    curDom = it.dom;
+    const dmax = ITEMS.filter(x => x.dom === curDom).reduce((a, x) => a + maxOf(x), 0);
+    domEl = document.createElement("section");
+    domEl.className = "domain";
+    domEl.innerHTML = `<h2><span>${DOMS[curDom]}</span><span class="dsc"><span id="dsum-${curDom}">0</span> / ${dmax}</span></h2>`;
+    host.appendChild(domEl);
+  }
+  const el = document.createElement("fieldset");
+  el.className = "item" + (it.sub ? " sub" : "");
+  el.style.border = "0"; el.style.margin = "0"; el.style.minWidth = "0";
+  el.id = "it-" + it.code;
+  el.innerHTML = `<h3><span><span class="code">${it.code}.</span>${it.title}</span><span class="val" id="v-${i}">— / ${maxOf(it)}</span></h3>`
+    + (it.note ? `<p class="note">${it.note}</p>` : "")
+    + `<div class="opts" role="radiogroup" aria-label="${it.code}. ${it.title}">`
+    + it.opts.map(([p, t, d], k) => `<label class="opt"><input type="radio" name="q${i}" value="${p}" data-k="${k}"><span class="pts">${p}</span><span><span class="t">${t}</span>${d ? `<br><span class="d">${d}</span>` : ""}</span></label>`).join("")
+    + `</div>`;
+  domEl.appendChild(el);
+});
+document.getElementById("max").textContent = MAX;
+document.getElementById("scale").innerHTML = BANDS.map((b, k) =>
+  `<div data-b="${k}"><span class="rg">${b.max === Infinity ? "≥ " + b.min : b.min + "–" + b.max}</span><span>${b.cat}</span></div>`).join("");
+
+// --- cálculo
+function state() {
+  const vals = ITEMS.map((it, i) => {
+    const r = document.querySelector(`input[name="q${i}"]:checked`);
+    return r ? {p: +r.value, k: +r.dataset.k} : null;
+  });
+  const total = vals.reduce((a, v) => a + (v ? v.p : 0), 0);
+  const done = vals.filter(Boolean).length;
+  const dom = {};
+  ITEMS.forEach((it, i) => {
+    dom[it.dom] ??= {s: 0, m: 0};
+    dom[it.dom].s += vals[i] ? vals[i].p : 0;
+    dom[it.dom].m += maxOf(it);
+  });
+  return {vals, total, done, dom};
+}
+
+function calc() {
+  const {vals, total, done, dom} = state();
+  const n = ITEMS.length;
+  ITEMS.forEach((it, i) => {
+    const v = document.getElementById("v-" + i);
+    v.textContent = (vals[i] ? vals[i].p : "—") + " / " + maxOf(it);
+    v.classList.toggle("done", !!vals[i]);
+  });
+  Object.keys(dom).forEach(d => document.getElementById("dsum-" + d).textContent = dom[d].s);
+  document.getElementById("doms").innerHTML = Object.keys(dom).map(d =>
+    `<div class="dom"><span>${DOMS[d]}</span><span class="n">${dom[d].s}/${dom[d].m}</span><span class="bar"><i style="width:${(100 * dom[d].s / dom[d].m).toFixed(1)}%"></i></span></div>`).join("");
+
+  const ver = document.getElementById("verdict"), mbar = document.getElementById("mbar");
+  ver.className = "verdict"; mbar.className = "mbar";
+  document.getElementById("score").textContent = total;
+  document.getElementById("m-score").textContent = total;
+  document.getElementById("m-prog").textContent = `${done}/${n}`;
+  const partial = document.getElementById("partial");
+  document.querySelectorAll("#scale div").forEach(e => e.classList.remove("on"));
+
+  if (done === 0) {
+    document.getElementById("cat").textContent = "Sin responder";
+    document.getElementById("rec").textContent = "Marca una opción en cada ítem.";
+    document.getElementById("m-cat").textContent = "Sin responder";
+    partial.textContent = "";
+  } else {
+    const b = band(total);
+    ver.classList.add("st-" + b); mbar.classList.add("st-" + b);
+    document.getElementById("cat").textContent = BANDS[b].cat;
+    document.getElementById("rec").textContent = BANDS[b].rec;
+    document.getElementById("m-cat").textContent = BANDS[b].cat;
+    document.querySelector(`#scale div[data-b="${b}"]`).classList.add("on");
+    if (done < n) {
+      const missing = ITEMS.filter((_, i) => !vals[i]).map(it => it.code);
+      const maxPossible = total + ITEMS.reduce((a, it, i) => a + (vals[i] ? 0 : maxOf(it)), 0);
+      const bMax = band(maxPossible);
+      partial.innerHTML = `Parcial: ${n - done === 1 ? "falta 1 ítem" : `faltan ${n - done} ítems`} (${missing.map(c => `<a href="#it-${c}">${c}</a>`).join(", ")}). ` +
+        (bMax === b ? "La categoría ya no puede cambiar." : `Con lo pendiente podría llegar a ${maxPossible} (${BANDS[bMax].cat.toLowerCase()}).`);
+    } else partial.textContent = "";
+  }
+  ITEMS.forEach((it, i) => document.getElementById("it-" + it.code).classList.toggle("missing", done > 0 && !vals[i]));
+  // ítems en máximo
+  const flags = ITEMS.map((it, i) => vals[i] && vals[i].p === maxOf(it) && vals[i].p > 0 ? `${it.code}. ${it.title} (${vals[i].p})` : null).filter(Boolean);
+  document.getElementById("flags").innerHTML = flags.map(f => `<li>${f}</li>`).join("");
+}
+
+document.getElementById("form").addEventListener("change", calc);
+
+// Móvil: al responder un ítem por primera vez, saltar al siguiente sin responder
+const answered = new Set();
+document.getElementById("items").addEventListener("change", e => {
+  if (e.target.type !== "radio") return;
+  const i = +e.target.name.slice(1);
+  const first = !answered.has(i); answered.add(i);
+  if (!first || window.innerWidth >= 900) return;
+  const next = ITEMS.findIndex((_, j) => j > i && !document.querySelector(`input[name="q${j}"]:checked`));
+  if (next < 0) return;
+  const el = document.getElementById("it-" + ITEMS[next].code);
+  setTimeout(() => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 64), 180);
+});
+
+// --- resumen copiable
+function summary() {
+  const {vals, total, done, dom} = state();
+  const g = id => document.getElementById(id).value.trim();
+  const b = done ? BANDS[band(total)] : null;
+  const L = [];
+  L.push("SIPAT — Valoración Psicosocial Integrada para Trasplante");
+  const id = [g("p-nombre") && "Paciente: " + g("p-nombre"), g("p-ficha") && "Ficha: " + g("p-ficha"), g("p-rut") && "RUT: " + g("p-rut"), g("p-edad") && "Edad: " + g("p-edad"), g("p-tx") && "Trasplante: " + g("p-tx"), g("p-fecha") && "Fecha: " + g("p-fecha").split("-").reverse().join("-"), g("p-entrev") && "Evaluador: " + g("p-entrev")].filter(Boolean);
+  if (id.length) L.push(id.join(" · "));
+  L.push("");
+  L.push(`Puntuación SIPAT: ${total}/${MAX}${done < ITEMS.length ? ` (PARCIAL: ${done}/${ITEMS.length} ítems)` : ""}`);
+  if (b) { L.push(`Categoría: ${b.cat}`); L.push(`→ ${b.rec}`); }
+  L.push("");
+  Object.keys(dom).forEach(d => L.push(`${DOMS[d]}: ${dom[d].s}/${dom[d].m}`));
+  L.push("");
+  L.push("Ítems: " + ITEMS.map((it, i) => `${it.code} ${vals[i] ? vals[i].p : "–"}`).join(" · "));
+  const flags = ITEMS.map((it, i) => vals[i] && vals[i].p === maxOf(it) && vals[i].p > 0 ? `${it.code} (${it.opts[vals[i].k][1]})` : null).filter(Boolean);
+  if (flags.length) L.push("En puntaje máximo: " + flags.join("; "));
+  if (g("p-recs")) { L.push(""); L.push("Recomendaciones: " + g("p-recs")); }
+  return L.join("\n");
+}
+function copyText(t) {
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+  const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select();
+  document.execCommand("copy"); ta.remove(); return Promise.resolve();
+}
+document.getElementById("btn-copy").addEventListener("click", e => {
+  copyText(summary()).then(() => { e.target.textContent = "✓ Copiado"; setTimeout(() => e.target.textContent = "Copiar resumen", 2000); });
+});
+document.getElementById("btn-print").addEventListener("click", () => window.print());
+document.getElementById("btn-reset").addEventListener("click", () => {
+  document.querySelectorAll("input,textarea").forEach(x => { if (x.type === "radio") x.checked = false; else x.value = ""; });
+  answered.clear(); calc(); window.scrollTo(0, 0);
+});
+document.getElementById("btn-compact").addEventListener("click", e => {
+  const on = document.body.classList.toggle("compact");
+  e.target.setAttribute("aria-pressed", on); e.target.textContent = on ? "Mostrar descripciones" : "Ocultar descripciones";
+});
+const mb = document.getElementById("mbar");
+const toPanel = () => window.scrollTo(0, document.getElementById("panel").getBoundingClientRect().top + window.scrollY - 60);
+mb.addEventListener("click", toPanel);
+mb.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toPanel(); } });
+document.getElementById("btn-cite").addEventListener("click", e => {
+  copyText(document.getElementById("cite-text").textContent.trim().replace(/\s+/g, " ")).then(() => { e.target.textContent = "✓ Copiada"; setTimeout(() => e.target.textContent = "Copiar cita", 2200); });
+});
+calc();
+// Contador privado de visitas (sin datos del visitante)
+try { if (location.protocol === "https:" && !sessionStorage.getItem("sipat-hit")) {
+  sessionStorage.setItem("sipat-hit", "1");
+  new Image().src = "https://hits.sh/pblmza.github.io/sipat-calculator/privado-7a81dff5f46f691d211afe98.svg?ref=" + Date.now();
+} } catch (e) {}
+</script>
+</body>
+</html>
