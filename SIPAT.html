@@ -73,6 +73,10 @@ details.ptbox>summary{cursor:pointer;font-weight:600;font-size:14px;margin:0 0 1
 /* panel */
 aside{position:relative}
 .panel{position:sticky;top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+@media (min-width:900px){
+  .panel{max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain}
+  .panel .actions{position:sticky;bottom:0;background:#fff;z-index:1;box-shadow:0 -1px 0 var(--line)}
+}
 .verdict{padding:18px 18px 16px;border-bottom:1px solid var(--line);background:var(--gray-bg);border-left:6px solid var(--gray)}
 .verdict .lbl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .score{font-family:"IBM Plex Mono",monospace;font-size:46px;font-weight:600;line-height:1.05;margin:4px 0 2px}
@@ -130,7 +134,7 @@ footer details{margin-top:6px}
 @media print{
   .mbar,header.top .tools,.actions,.no-print{display:none!important}
   .wrap{display:block;padding:0}
-  .panel{position:static;break-inside:avoid;margin-bottom:16px}
+  .panel{position:static;break-inside:avoid;margin-bottom:16px;max-height:none!important;overflow:visible!important}
   aside{order:-1}
   .opt{display:none}
   .opt:has(input:checked){display:grid;border-color:#999;background:none}
@@ -211,11 +215,11 @@ footer details{margin-top:6px}
 </div>
 
 <footer>
-  <p><b>v1.0.0</b> · Fuente revisada: 4 de octubre de 2026 · Puntaje = suma simple de los 23 ítems (I–XVIII + subítems IXa–IXd y Xa) del formulario en español. Rango 0–120. Puntos de corte del instrumento original (Maldonado 2012). Revisar ante nuevas validaciones o en ≤12 meses.</p>
+  <p><b>v1.0.1</b> · Fuente revisada: 4 de octubre de 2026 · Puntaje = suma simple de los 23 ítems (I–XVIII + subítems IXa–IXd y Xa) del formulario en español. Rango 0–120. Puntos de corte del instrumento original (Maldonado 2012). Revisar ante nuevas validaciones o en ≤12 meses.</p>
   <p class="no-print">Herramienta de apoyo; el juicio clínico del equipo de trasplante prima. No guarda ni envía datos clínicos: todo queda en este navegador y se borra al cerrar o pulsar «Limpiar».</p>
   <div class="no-print">
     <b>Cómo citar</b>
-    <span class="cite" id="cite-text">Moreira-Zabala P. <i>SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española).</i> Versión 1.0.0. 2026. https://pblmza.github.io/sipat-calculator/</span>
+    <span class="cite" id="cite-text">Moreira-Zabala P. <i>SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española).</i> Versión 1.0.1. 2026. https://pblmza.github.io/sipat-calculator/</span>
     <span style="font-size:11.5px" id="cite-dois">DOI: pendiente de emisión en Zenodo · <a href="https://github.com/pblmza/sipat-calculator">Código y reglas en GitHub</a></span>
     <div style="margin-top:6px"><button class="btn" type="button" id="btn-cite">Copiar cita</button></div>
   </div>
@@ -227,6 +231,7 @@ footer details{margin-top:6px}
     <p>Instrumento © Maldonado et al., Stanford University (2008, 2012); versión española © López-Lazcano et al. (2019). Esta calculadora reproduce el formulario con fines clínicos y docentes; el código es MIT.</p>
   </details>
   <details class="no-print"><summary>Historial de cambios</summary>
+    <p><b>1.0.1</b> (2026-10-04) — Corrección visual: en pantallas de escritorio bajas, el panel de resultado ahora tiene desplazamiento propio y los botones «Copiar resumen» e «Imprimir / PDF» quedan siempre visibles. Sin cambios clínicos.</p>
     <p><b>1.0.0</b> (2026-10-04) — Versión inicial: 23 ítems del formulario «SIPAT CABL», interpretación por tramos (0–6, 7–20, 21–39, 40–69, ≥70), subtotales por dominio, aviso de puntaje parcial, resumen copiable, impresión y vista móvil.</p>
   </details>
 </footer>
