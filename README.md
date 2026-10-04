@@ -36,11 +36,11 @@ Total = suma simple de I–XVIII + IXa, IXb, IXc, IXd y Xa. La versión inglesa 
 
 ## Versiones y vigencia
 
-Versión actual: **1.0.0** · fuente revisada el 2026-10-04 · revisar ante nuevas validaciones o en ≤12 meses. Ver [CHANGELOG.md](CHANGELOG.md).
+Versión actual: **1.0.1** · fuente revisada el 2026-10-04 · revisar ante nuevas validaciones o en ≤12 meses. Ver [CHANGELOG.md](CHANGELOG.md).
 
 ## Cómo citar
 
-Moreira-Zabala P. *SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española).* Versión 1.0.0. 2026. https://pblmza.github.io/sipat-calculator/
+Moreira-Zabala P. *SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española).* Versión 1.0.1. 2026. https://pblmza.github.io/sipat-calculator/
 
 ## Licencia
 

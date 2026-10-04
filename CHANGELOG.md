@@ -2,6 +2,12 @@
 
 Formato: [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado semántico: PATCH = cosmético/cita (invariante clínico), MINOR = cambios de ítems o reglas con fuente citada, MAJOR = cambio en la semántica del puntaje.
 
+## [1.0.1] — 2026-10-04
+
+### Corregido
+- Escritorio: el panel de resultado tiene desplazamiento propio y los botones «Copiar resumen» e «Imprimir / PDF» quedan siempre visibles en pantallas bajas. Impresión sin recorte.
+- Invariante clínico: sin cambios en ítems, valores ni tramos.
+
 ## [1.0.0] — 2026-10-04
 
 ### Añadido

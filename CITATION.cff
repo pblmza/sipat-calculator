@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "Si usas esta herramienta, cítala así."
 type: software
 title: "SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española)"
-version: 1.0.0
+version: 1.0.1
 date-released: 2026-10-04
 license: MIT
 repository-code: "https://github.com/pblmza/sipat-calculator"
