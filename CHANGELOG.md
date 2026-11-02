@@ -2,6 +2,12 @@
 
 Formato: [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado semántico: PATCH = cosmético/cita (invariante clínico), MINOR = cambios de ítems o reglas con fuente citada, MAJOR = cambio en la semántica del puntaje.
 
+## [1.0.2] — 2026-10-04
+
+### Corregido
+- Impresión/PDF: historia clínica y recomendaciones se imprimen como texto que fluye entre páginas (el cuadro de texto saltaba entero a la hoja 2 dejando la primera a medio llenar). Datos del paciente en grilla compacta; títulos de dominio no quedan huérfanos al pie de página.
+- Invariante clínico: sin cambios en ítems, valores ni tramos.
+
 ## [1.0.1] — 2026-10-04
 
 ### Corregido

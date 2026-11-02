@@ -141,7 +141,16 @@ footer details{margin-top:6px}
   .opt .d{display:block}
   .item{break-inside:avoid;padding:8px 0}
   body{font-size:12px}
+  textarea{display:none!important}
+  .print-mirror{display:block!important}
+  .pt{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 12px;padding:10px;background:none}
+  .pt input{min-height:0;padding:3px 8px;font-size:12px}
+  .pt input::placeholder{color:transparent}
+  .pt label.full{display:block}
+  .pt label.full input{display:block;width:100%}
+  .domain>h2{break-after:avoid}
 }
+.print-mirror{display:none;white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);border-radius:7px;padding:8px 10px;color:var(--ink);font-size:13px;line-height:1.45;margin-top:3px}
 </style>
 </head>
 <body>
@@ -215,11 +224,11 @@ footer details{margin-top:6px}
 </div>
 
 <footer>
-  <p><b>v1.0.1</b> · Fuente revisada: 4 de octubre de 2026 · Puntaje = suma simple de los 23 ítems (I–XVIII + subítems IXa–IXd y Xa) del formulario en español. Rango 0–120. Puntos de corte del instrumento original (Maldonado 2012). Revisar ante nuevas validaciones o en ≤12 meses.</p>
+  <p><b>v1.0.2</b> · Fuente revisada: 4 de octubre de 2026 · Puntaje = suma simple de los 23 ítems (I–XVIII + subítems IXa–IXd y Xa) del formulario en español. Rango 0–120. Puntos de corte del instrumento original (Maldonado 2012). Revisar ante nuevas validaciones o en ≤12 meses.</p>
   <p class="no-print">Herramienta de apoyo; el juicio clínico del equipo de trasplante prima. No guarda ni envía datos clínicos: todo queda en este navegador y se borra al cerrar o pulsar «Limpiar».</p>
   <div class="no-print">
     <b>Cómo citar</b>
-    <span class="cite" id="cite-text">Moreira-Zabala P. <i>SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española).</i> Versión 1.0.1. 2026. https://pblmza.github.io/sipat-calculator/</span>
+    <span class="cite" id="cite-text">Moreira-Zabala P. <i>SIPAT: calculadora web de la Valoración Psicosocial Integrada para Trasplante de Stanford (versión española).</i> Versión 1.0.2. 2026. https://pblmza.github.io/sipat-calculator/</span>
     <span style="font-size:11.5px" id="cite-dois">DOI: pendiente de emisión en Zenodo · <a href="https://github.com/pblmza/sipat-calculator">Código y reglas en GitHub</a></span>
     <div style="margin-top:6px"><button class="btn" type="button" id="btn-cite">Copiar cita</button></div>
   </div>
@@ -231,6 +240,7 @@ footer details{margin-top:6px}
     <p>Instrumento © Maldonado et al., Stanford University (2008, 2012); versión española © López-Lazcano et al. (2019). Esta calculadora reproduce el formulario con fines clínicos y docentes; el código es MIT.</p>
   </details>
   <details class="no-print"><summary>Historial de cambios</summary>
+    <p><b>1.0.2</b> (2026-10-04) — Impresión/PDF: la historia clínica y las recomendaciones se imprimen como texto que fluye entre páginas (antes el cuadro saltaba entero a la hoja 2 dejando la primera a medio llenar). Sin cambios clínicos.</p>
     <p><b>1.0.1</b> (2026-10-04) — Corrección visual: en pantallas de escritorio bajas, el panel de resultado ahora tiene desplazamiento propio y los botones «Copiar resumen» e «Imprimir / PDF» quedan siempre visibles. Sin cambios clínicos.</p>
     <p><b>1.0.0</b> (2026-10-04) — Versión inicial: 23 ítems del formulario «SIPAT CABL», interpretación por tramos (0–6, 7–20, 21–39, 40–69, ≥70), subtotales por dominio, aviso de puntaje parcial, resumen copiable, impresión y vista móvil.</p>
   </details>
@@ -524,7 +534,7 @@ document.getElementById("btn-copy").addEventListener("click", e => {
 document.getElementById("btn-print").addEventListener("click", () => window.print());
 document.getElementById("btn-reset").addEventListener("click", () => {
   document.querySelectorAll("input,textarea").forEach(x => { if (x.type === "radio") x.checked = false; else x.value = ""; });
-  answered.clear(); calc(); window.scrollTo(0, 0);
+  answered.clear(); document.querySelectorAll("textarea").forEach(t => t._sync && t._sync()); calc(); window.scrollTo(0, 0);
 });
 document.getElementById("btn-compact").addEventListener("click", e => {
   const on = document.body.classList.toggle("compact");
@@ -537,6 +547,15 @@ mb.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { 
 document.getElementById("btn-cite").addEventListener("click", e => {
   copyText(document.getElementById("cite-text").textContent.trim().replace(/\s+/g, " ")).then(() => { e.target.textContent = "✓ Copiada"; setTimeout(() => e.target.textContent = "Copiar cita", 2200); });
 });
+// Impresión: los <textarea> no se pueden partir entre páginas (dejan hueco y cortan texto);
+// se imprime una copia en <div> que sí fluye entre hojas.
+document.querySelectorAll("textarea").forEach(ta => {
+  const m = document.createElement("div"); m.className = "print-mirror";
+  ta.after(m);
+  const sync = () => { m.textContent = ta.value; m.style.visibility = ta.value ? "" : "hidden"; };
+  ta.addEventListener("input", sync); ta._sync = sync; sync();
+});
+window.addEventListener("beforeprint", () => document.querySelectorAll("textarea").forEach(t => t._sync && t._sync()));
 calc();
 // Contador privado de visitas (sin datos del visitante)
 try { if (location.protocol === "https:" && !sessionStorage.getItem("sipat-hit")) {
